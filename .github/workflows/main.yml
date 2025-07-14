@@ -39,6 +39,10 @@ jobs:
           git commit -m "🧠 auto: ankle DICOM filtered & curvature analyzed and visualized" || echo "No changes"
           git push
 
+      - name: 📈 Run Contact Ratio Fitting
+        run: |
+          python fit_contact_ratio_model.py
+
       - name: Upload all analysis artifacts
         uses: actions/upload-artifact@v4
         with:
