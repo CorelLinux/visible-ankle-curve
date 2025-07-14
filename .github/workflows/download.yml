@@ -16,7 +16,7 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: pip install pydicom requests opencv-python-headless numpy
+        run: pip install pydicom requests opencv-python-headless numpy matplotlib
 
       - name: Make required folders (just in case)
         run: mkdir -p data/dcm results scripts
@@ -37,7 +37,7 @@ jobs:
         run: python scripts/analyze_curvature.py
 
       - name: Upload analysis artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: curvature-analysis
           path: results/
