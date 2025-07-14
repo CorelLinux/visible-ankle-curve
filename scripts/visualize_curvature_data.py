@@ -5,24 +5,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pydicom
 import cv2
-from scipy.stats import mode # 최빈값 계산을 위해 추가
-
-# --- 한글 폰트 설정 시작 ---
+from scipy.stats import mode
 from matplotlib import font_manager, rc
 
-font_name = font_manager.FontProperties(fname='/usr/share/fonts/truetype/nanum/NanumGothic.ttf').get_name()
-if not font_manager.findfont(font_name):
-    print("경고: NanumGothic 폰트를 찾을 수 없습니다. 다른 폰트를 시도합니다.")
-    try:
-        font_name = font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc').get_name()
-        if not font_manager.findfont(font_name):
-            print("경고: NotoSansCJK-Regular 폰트도 찾을 수 없습니다. 기본 sans-serif 폰트를 사용합니다.")
-            font_name = 'sans-serif'
-    except Exception:
-        print("경고: Noto Sans CJK KR 폰트 경로 설정 실패. 기본 sans-serif 폰트를 사용합니다.")
-        font_name = 'sans-serif'
+# --- 한글 폰트 설정 시작 (수정된 부분) ---
+# 직접 다운로드한 폰트 파일 경로 지정
+FONT_PATH = 'scripts/fonts/NotoSansKR-Regular.otf'
 
-rc('font', family=font_name)
+# 폰트 매니저에 폰트 추가 및 설정
+if os.path.exists(FONT_PATH):
+    font_name = font_manager.FontProperties(fname=FONT_PATH).get_name()
+    rc('font', family=font_name)
+    print(f"'{FONT_PATH}' 폰트를 사용하여 Matplotlib 설정 완료.")
+else:
+    # 폰트 파일이 없을 경우 경고 메시지 출력 및 기본 폰트 사용
+    print(f"경고: 폰트 파일 '{FONT_PATH}'을(를) 찾을 수 없습니다. 기본 'sans-serif' 폰트를 사용합니다. 한글이 깨질 수 있습니다.")
+    rc('font', family='sans-serif')
+
 plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
 # --- 한글 폰트 설정 끝 ---
 
@@ -33,6 +32,8 @@ output_graph_dir = "results/final_graphs"
 smoothing_window_size = 5
 
 os.makedirs(output_graph_dir, exist_ok=True)
+
+# ... (나머지 visualize_curvature_data.py 코드는 동일)
 
 print("[*] 그래프 생성을 위한 데이터 및 통계 불러오기 시작")
 
