@@ -1,29 +1,37 @@
-name: Download from Dataverse & Process
+name: Download & Filter Visible Human CT
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - 'scripts/download_dataverse.py'
 
 jobs:
-  download-and-process:
+  extract-ankle:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python
+
+      - name: Set up Python
         uses: actions/setup-python@v4
-        with: python-version: '3.10'
-      - name: Install libs
-        run: pip install requests pydicom opencv-python-headless numpy
-      - name: Download DICOMs
-        run: python scripts/download_dataverse.py
-      - name: Process Canny Curvature
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: pip install pydicom requests opencv-python-headless numpy
+
+      - name: Make required folders (just in case)
+        run: mkdir -p data/dcm results scripts
+
+      - name: Download & filter ankle slices
+        run: python scripts/download_and_filter.py
+
+      - name: Run curvature analysis
         run: python scripts/process_canny.py
+
       - name: Commit results
         run: |
           git config user.name "ankle-bot"
-          git config user.email "bot@example.com"
+          git config user.email "ankle-bot@example.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
           git add data/dcm/*.dcm results/curvature.json
-          git commit -m "📥 Dataverse download + 곡률 분석" || echo "No changes"
+          git commit -m "🧠 auto: ankle DICOM filtered & curvature analyzed" || echo "No changes"
           git push
