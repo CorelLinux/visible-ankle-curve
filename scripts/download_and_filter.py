@@ -1,29 +1,45 @@
-name: Download from Dataverse & Process
+#!/usr/bin/env python3
+import os, tarfile, requests
+import pydicom
 
-on:
-  workflow_dispatch:
-  push:
-    paths:
-      - 'scripts/download_dataverse.py'
+# 1. 설정
+DATA_DIR = "data/dcm"
+URL = "https://dataverse.harvard.edu/api/access/datafile/3086866"
+ARCHIVE_PATH = os.path.join(DATA_DIR, "VH_M_CT.tar.bz2")
+os.makedirs(DATA_DIR, exist_ok=True)
 
-jobs:
-  download-and-process:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with: python-version: '3.10'
-      - name: Install libs
-        run: pip install requests pydicom opencv-python-headless numpy
-      - name: Download DICOMs
-        run: python scripts/download_dataverse.py
-      - name: Process Canny Curvature
-        run: python scripts/process_canny.py
-      - name: Commit results
-        run: |
-          git config user.name "ankle-bot"
-          git config user.email "bot@example.com"
-          git add data/dcm/*.dcm results/curvature.json
-          git commit -m "📥 Dataverse download + 곡률 분석" || echo "No changes"
-          git push
+# 2. 다운로드
+print("[*] Downloading CT archive...")
+r = requests.get(URL, stream=True)
+with open(ARCHIVE_PATH, "wb") as f:
+    for chunk in r.iter_content(chunk_size=8192):
+        if chunk:
+            f.write(chunk)
+print("[✓] Download complete.")
+
+# 3. 압축 해제
+print("[*] Extracting archive...")
+with tarfile.open(ARCHIVE_PATH, "r:bz2") as tar:
+    tar.extractall(DATA_DIR)
+
+# 4. 필터링 - ankle만 유지
+print("[*] Filtering for ankle slices...")
+count = 0
+for fname in os.listdir(DATA_DIR):
+    fpath = os.path.join(DATA_DIR, fname)
+    if not fname.lower().endswith(".dcm"):
+        continue
+    try:
+        ds = pydicom.dcmread(fpath, stop_before_pixels=True)
+        desc = str(getattr(ds, "SeriesDescription", "")).lower()
+        if "ankle" not in fname.lower() and "ankle" not in desc:
+            os.remove(fpath)
+        else:
+            count += 1
+    except Exception as e:
+        os.remove(fpath)
+
+print(f"[✓] Filtering done. {count} ankle-related slices kept.")
+
+# 5. 압축파일 삭제
+os.remove(ARCHIVE_PATH)
