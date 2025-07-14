@@ -3,32 +3,22 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-# --- 한글 폰트 설정 시작 ---
 from matplotlib import font_manager, rc
 
-# 폰트 경로 지정 (GitHub Actions 환경을 고려한 기본 폰트)
-# 'NanumGothic'이 가장 흔하게 사용되고, Ubuntu 런타임에 설치되어 있을 가능성이 높음.
-# 만약 설치되어 있지 않다면 아래 fallback 폰트들을 시도하거나 직접 설치해야 함.
-font_name = font_manager.FontProperties(fname='/usr/share/fonts/truetype/nanum/NanumGothic.ttf').get_name()
-# 만약 NanumGothic이 없으면 다른 기본 폰트나 대체 폰트를 시도
-if not font_manager.findfont(font_name):
-    # D-Hack 환경에서는 NanumGothic이 없을 수 있으니,
-    # Ubuntu 기본 폰트 중 한글 지원하는 폰트를 시도 (예: Noto Sans CJK JP/KR)
-    # Ubuntu 20.04+ 환경에는 'NotoSansCJK-Regular.ttc' 또는 'UnDotum.ttf' 등이 있을 수 있음.
-    # 안전하게는 'sans-serif'로 설정하고, matplotlib이 알아서 시스템 기본 한글 폰트를 찾게 하는 방법도 있음.
-    # 하지만 특정 폰트 지정이 더 확실함.
-    print("경고: NanumGothic 폰트를 찾을 수 없습니다. 다른 폰트를 시도합니다.")
-    try: # Noto Sans CJK KR (Ubuntu 기본 폰트 중 하나일 가능성)
-        font_name = font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc').get_name()
-        if not font_manager.findfont(font_name):
-            print("경고: NotoSansCJK-Regular 폰트도 찾을 수 없습니다. 기본 sans-serif 폰트를 사용합니다.")
-            font_name = 'sans-serif' # 최종 대체
-    except Exception:
-        print("경고: Noto Sans CJK KR 폰트 경로 설정 실패. 기본 sans-serif 폰트를 사용합니다.")
-        font_name = 'sans-serif' # 최종 대체
+# --- 한글 폰트 설정 시작 (수정된 부분) ---
+# 직접 다운로드한 폰트 파일 경로 지정
+FONT_PATH = 'scripts/fonts/NotoSansKR-Regular.otf'
 
-rc('font', family=font_name)
+# 폰트 매니저에 폰트 추가 및 설정
+if os.path.exists(FONT_PATH):
+    font_name = font_manager.FontProperties(fname=FONT_PATH).get_name()
+    rc('font', family=font_name)
+    print(f"'{FONT_PATH}' 폰트를 사용하여 Matplotlib 설정 완료.")
+else:
+    # 폰트 파일이 없을 경우 경고 메시지 출력 및 기본 폰트 사용
+    print(f"경고: 폰트 파일 '{FONT_PATH}'을(를) 찾을 수 없습니다. 기본 'sans-serif' 폰트를 사용합니다. 한글이 깨질 수 있습니다.")
+    rc('font', family='sans-serif')
+
 plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
 # --- 한글 폰트 설정 끝 ---
 
