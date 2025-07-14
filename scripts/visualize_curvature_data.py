@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+#!/usr/bin/env python3
+import os
 import json
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,12 +9,30 @@ import pydicom
 import cv2
 from scipy.stats import mode # 최빈값 계산을 위해 추가
 
+# --- 한글 폰트 설정 시작 ---
+from matplotlib import font_manager, rc
+
+font_name = font_manager.FontProperties(fname='/usr/share/fonts/truetype/nanum/NanumGothic.ttf').get_name()
+if not font_manager.findfont(font_name):
+    print("경고: NanumGothic 폰트를 찾을 수 없습니다. 다른 폰트를 시도합니다.")
+    try:
+        font_name = font_manager.FontProperties(fname='/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc').get_name()
+        if not font_manager.findfont(font_name):
+            print("경고: NotoSansCJK-Regular 폰트도 찾을 수 없습니다. 기본 sans-serif 폰트를 사용합니다.")
+            font_name = 'sans-serif'
+    except Exception:
+        print("경고: Noto Sans CJK KR 폰트 경로 설정 실패. 기본 sans-serif 폰트를 사용합니다.")
+        font_name = 'sans-serif'
+
+rc('font', family=font_name)
+plt.rcParams['axes.unicode_minus'] = False # 마이너스 기호 깨짐 방지
+# --- 한글 폰트 설정 끝 ---
+
 # --- 설정값 ---
-# analyze_curvature.py 에서 생성되는 파일 경로
 input_stats_file = "results/statistics.json"
-input_dcm_dir = "data/dcm" # 원본 dcm 파일 경로 (이미지 예시를 위해 필요)
-output_graph_dir = "results/final_graphs" # 최종 그래프들을 저장할 폴더 (artifact 업로드용)
-smoothing_window_size = 5 # 스무딩(이동 평균) 윈도우 크기. 숫자가 클수록 더 부드러워짐.
+input_dcm_dir = "data/dcm"
+output_graph_dir = "results/final_graphs"
+smoothing_window_size = 5
 
 os.makedirs(output_graph_dir, exist_ok=True)
 
