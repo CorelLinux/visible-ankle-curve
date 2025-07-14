@@ -18,13 +18,14 @@ jobs:
       - name: Install Python dependencies
         run: pip install pydicom requests opencv-python-headless numpy matplotlib scipy
 
-      - name: Download and Prepare Korean Font # 폰트 제발좀
+      - name: Download and Prepare Korean Font (TTF Version) # 변경된 부분!
         run: |
-          mkdir -p scripts/fonts # 폰트 저장할 디렉토리 생성
-          # Google Noto Sans KR Regular 폰트 직접 다운로드
-          # curl -L 명령어로 리다이렉트 따라가며 다운로드
-          curl -L https://github.com/googlefonts/noto-cjk/raw/main/fonts/NotoSansKR-Regular.otf -o scripts/fonts/NotoSansKR-Regular.otf
-          echo "NotoSansKR-Regular.otf downloaded to scripts/fonts/"
+          rm -rf scripts/fonts # 기존 폰트 폴더 및 내용 완전 삭제
+          mkdir -p scripts/fonts # 폰트 저장할 디렉토리 새로 생성
+          # Google Noto Sans KR Regular TTF 폰트 직접 다운로드
+          # TTF 버전의 URL을 사용
+          curl -L https://github.com/googlefonts/noto-cjk/raw/main/fonts/NotoSansKR-Regular.ttf -o scripts/fonts/NotoSansKR-Regular.ttf
+          echo "NotoSansKR-Regular.ttf downloaded to scripts/fonts/"
 
       - name: Make required folders (just in case)
         run: mkdir -p data/dcm results scripts results/final_graphs
