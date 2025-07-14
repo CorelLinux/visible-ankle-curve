@@ -41,7 +41,7 @@ jobs:
 
       - name: 📈 Run Contact Ratio Fitting
         run: |
-          python fit_contact_ratio_model.py
+          python scripts/fit_contact_ratio_model.py
 
       - name: Upload all analysis artifacts
         uses: actions/upload-artifact@v4
