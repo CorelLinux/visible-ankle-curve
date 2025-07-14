@@ -32,3 +32,12 @@ jobs:
           git add data/dcm/*.dcm results/curvature.json
           git commit -m "🧠 auto: ankle DICOM filtered & curvature analyzed" || echo "No changes"
           git push
+
+      - name: Run analysis and generate visualizations
+        run: python scripts/analyze_curvature.py
+
+      - name: Upload analysis artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: curvature-analysis
+          path: results/
