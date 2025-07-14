@@ -16,28 +16,37 @@ jobs:
           python-version: '3.10'
 
       - name: Install Python dependencies
-        run: pip install pydicom requests opencv-python-headless numpy matplotlib
+        run: pip install pydicom requests opencv-python-headless numpy matplotlib scipy # scipy 추가!
 
       - name: Make required folders (just in case)
-        run: mkdir -p data/dcm results scripts
+        run: mkdir -p data/dcm results scripts results/final_graphs # final_graphs 폴더도 미리 만들어두자
 
-      - name: Run curvature analysis
-        run: python scripts/process_canny.py
+      - name: Run curvature analysis (process_canny.py)
+        run: python scripts/process_canny.py # 이 스크립트가 results/curvature.json을 생성할 것으로 예상
 
-      - name: Commit results
+      - name: Run main analysis and generate basic visualizations (analyze_curvature.py)
+        # 이 스크립트가 results/statistics.json, results/curvature_vs_slice.png 등을 생성
+        run: python scripts/analyze_curvature.py
+
+      - name: Generate advanced visualizations (visualize_curvature_data.py)
+        # 이 스크립트가 results/statistics.json을 읽고 results/final_graphs/ 에 추가 그래프를 생성
+        run: python scripts/visualize_curvature_data.py
+
+      - name: Commit results # 선택 사항: Git LFS를 사용하지 않거나, 작은 파일만 커밋할 때 유용
         run: |
           git config user.name "ankle-bot"
           git config user.email "ankle-bot@example.com"
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add data/dcm/*.dcm results/curvature.json
-          git commit -m "🧠 auto: ankle DICOM filtered & curvature analyzed" || echo "No changes"
+          # Git LFS를 사용한다면 data/dcm/*.dcm 대신 git lfs track / git lfs push 등을 고려
+          git add data/dcm/*.dcm results/curvature.json results/statistics.json results/curvature_vs_slice.png results/radius_histogram.png results/curvature_histogram.png results/final_graphs/*.png
+          git commit -m "🧠 auto: ankle DICOM filtered & curvature analyzed and visualized" || echo "No changes"
           git push
 
-      - name: Run analysis and generate visualizations
-        run: python scripts/analyze_curvature.py
-
-      - name: Upload analysis artifacts
+      - name: Upload all analysis artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: curvature-analysis
+          name: curvature-analysis-artifacts # 아티팩트 이름 좀 더 명확하게 변경
+          # results 폴더의 모든 내용을 업로드 (이제 final_graphs도 포함됨)
           path: results/
+          # retention-days: 5 # 선택 사항: 아티팩트 보관 기간 설정
+
