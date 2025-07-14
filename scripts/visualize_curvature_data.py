@@ -10,7 +10,7 @@ from matplotlib import font_manager, rc
 
 # --- 한글 폰트 설정 시작 (수정된 부분) ---
 # 직접 다운로드한 폰트 파일 경로 지정
-FONT_PATH = 'scripts/fonts/NotoSansKR-Regular.otf'
+FONT_PATH = 'scripts/fonts/NotoSansKR-Regular.ttf'
 
 # 폰트 매니저에 폰트 추가 및 설정
 if os.path.exists(FONT_PATH):
