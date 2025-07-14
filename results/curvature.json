@@ -1,0 +1,602 @@
+{
+  "VHFCT1mm-Ankle (74).dcm": {
+    "radius": 89.32,
+    "curvature": 0.0112
+  },
+  "VHFCT1mm-Ankle (126).dcm": {
+    "radius": 179.41,
+    "curvature": 0.00557
+  },
+  "VHFCT1mm-Ankle (108).dcm": {
+    "radius": 142.12,
+    "curvature": 0.00704
+  },
+  "VHFCT1mm-Ankle (128).dcm": {
+    "radius": 121.87,
+    "curvature": 0.00821
+  },
+  "VHFCT1mm-Ankle (115).dcm": {
+    "radius": 47.45,
+    "curvature": 0.02108
+  },
+  "VHFCT1mm-Ankle (96).dcm": {
+    "radius": 186.03,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (136).dcm": {
+    "radius": 76.11,
+    "curvature": 0.01314
+  },
+  "VHFCT1mm-Ankle (72).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (134).dcm": {
+    "radius": 62.39,
+    "curvature": 0.01603
+  },
+  "VHFCT1mm-Ankle (79).dcm": {
+    "radius": 186.09,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (40).dcm": {
+    "radius": 153.0,
+    "curvature": 0.00654
+  },
+  "VHFCT1mm-Ankle (118).dcm": {
+    "radius": 182.18,
+    "curvature": 0.00549
+  },
+  "VHFCT1mm-Ankle (24).dcm": {
+    "radius": 186.29,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (127).dcm": {
+    "radius": 102.83,
+    "curvature": 0.00973
+  },
+  "VHFCT1mm-Ankle (27).dcm": {
+    "radius": 74.83,
+    "curvature": 0.01336
+  },
+  "VHFCT1mm-Ankle (28).dcm": {
+    "radius": 166.42,
+    "curvature": 0.00601
+  },
+  "VHFCT1mm-Ankle (34).dcm": {
+    "radius": 71.18,
+    "curvature": 0.01405
+  },
+  "VHFCT1mm-Ankle (18).dcm": {
+    "radius": 49.22,
+    "curvature": 0.02032
+  },
+  "VHFCT1mm-Ankle (9).dcm": {
+    "radius": 46.64,
+    "curvature": 0.02144
+  },
+  "VHFCT1mm-Ankle (138).dcm": {
+    "radius": 121.05,
+    "curvature": 0.00826
+  },
+  "VHFCT1mm-Ankle (84).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (57).dcm": {
+    "radius": 168.87,
+    "curvature": 0.00592
+  },
+  "VHFCT1mm-Ankle (43).dcm": {
+    "radius": 65.69,
+    "curvature": 0.01522
+  },
+  "VHFCT1mm-Ankle (62).dcm": {
+    "radius": 186.02,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (119).dcm": {
+    "radius": 185.94,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (29).dcm": {
+    "radius": 186.26,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (83).dcm": {
+    "radius": 186.01,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (89).dcm": {
+    "radius": 186.03,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (95).dcm": {
+    "radius": 186.02,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (48).dcm": {
+    "radius": 185.9,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (100).dcm": {
+    "radius": 83.79,
+    "curvature": 0.01193
+  },
+  "VHFCT1mm-Ankle (147).dcm": {
+    "radius": 92.66,
+    "curvature": 0.01079
+  },
+  "VHFCT1mm-Ankle (37).dcm": {
+    "radius": 185.99,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (11).dcm": {
+    "radius": 185.93,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (16).dcm": {
+    "radius": 185.94,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (113).dcm": {
+    "radius": 66.56,
+    "curvature": 0.01502
+  },
+  "VHFCT1mm-Ankle (85).dcm": {
+    "radius": 185.98,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (86).dcm": {
+    "radius": 185.95,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (17).dcm": {
+    "radius": 185.81,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (65).dcm": {
+    "radius": 186.27,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (1).dcm": {
+    "radius": 132.9,
+    "curvature": 0.00752
+  },
+  "VHFCT1mm-Ankle (107).dcm": {
+    "radius": 185.69,
+    "curvature": 0.00539
+  },
+  "VHFCT1mm-Ankle (141).dcm": {
+    "radius": 186.2,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (114).dcm": {
+    "radius": 134.71,
+    "curvature": 0.00742
+  },
+  "VHFCT1mm-Ankle (104).dcm": {
+    "radius": 140.67,
+    "curvature": 0.00711
+  },
+  "VHFCT1mm-Ankle (97).dcm": {
+    "radius": 172.25,
+    "curvature": 0.00581
+  },
+  "VHFCT1mm-Ankle (30).dcm": {
+    "radius": 186.08,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (3).dcm": {
+    "radius": 183.25,
+    "curvature": 0.00546
+  },
+  "VHFCT1mm-Ankle (51).dcm": {
+    "radius": 55.66,
+    "curvature": 0.01796
+  },
+  "VHFCT1mm-Ankle (4).dcm": {
+    "radius": 53.69,
+    "curvature": 0.01863
+  },
+  "VHFCT1mm-Ankle (36).dcm": {
+    "radius": 69.62,
+    "curvature": 0.01436
+  },
+  "VHFCT1mm-Ankle (146).dcm": {
+    "radius": 142.3,
+    "curvature": 0.00703
+  },
+  "VHFCT1mm-Ankle (142).dcm": {
+    "radius": 185.89,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (103).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (52).dcm": {
+    "radius": 141.12,
+    "curvature": 0.00709
+  },
+  "VHFCT1mm-Ankle (23).dcm": {
+    "radius": 185.99,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (116).dcm": {
+    "radius": 185.99,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (132).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (81).dcm": {
+    "radius": 186.31,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (35).dcm": {
+    "radius": 77.96,
+    "curvature": 0.01283
+  },
+  "VHFCT1mm-Ankle (88).dcm": {
+    "radius": 186.2,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (2).dcm": {
+    "radius": 40.61,
+    "curvature": 0.02462
+  },
+  "VHFCT1mm-Ankle (124).dcm": {
+    "radius": 156.3,
+    "curvature": 0.0064
+  },
+  "VHFCT1mm-Ankle (54).dcm": {
+    "radius": 185.97,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (150).dcm": {
+    "radius": 92.6,
+    "curvature": 0.0108
+  },
+  "VHFCT1mm-Ankle (106).dcm": {
+    "radius": 142.29,
+    "curvature": 0.00703
+  },
+  "VHFCT1mm-Ankle (99).dcm": {
+    "radius": 107.65,
+    "curvature": 0.00929
+  },
+  "VHFCT1mm-Ankle (42).dcm": {
+    "radius": 38.33,
+    "curvature": 0.02609
+  },
+  "VHFCT1mm-Ankle (64).dcm": {
+    "radius": 185.97,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (77).dcm": {
+    "radius": 186.07,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (31).dcm": {
+    "radius": 82.39,
+    "curvature": 0.01214
+  },
+  "VHFCT1mm-Ankle (122).dcm": {
+    "radius": 185.85,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (60).dcm": {
+    "radius": 186.1,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (91).dcm": {
+    "radius": 186.29,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (109).dcm": {
+    "radius": 185.97,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (13).dcm": {
+    "radius": 71.98,
+    "curvature": 0.01389
+  },
+  "VHFCT1mm-Ankle (117).dcm": {
+    "radius": 185.69,
+    "curvature": 0.00539
+  },
+  "VHFCT1mm-Ankle (120).dcm": {
+    "radius": 101.28,
+    "curvature": 0.00987
+  },
+  "VHFCT1mm-Ankle (14).dcm": {
+    "radius": 186.2,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (44).dcm": {
+    "radius": 61.61,
+    "curvature": 0.01623
+  },
+  "VHFCT1mm-Ankle (110).dcm": {
+    "radius": 149.55,
+    "curvature": 0.00669
+  },
+  "VHFCT1mm-Ankle (102).dcm": {
+    "radius": 186.2,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (21).dcm": {
+    "radius": 70.44,
+    "curvature": 0.0142
+  },
+  "VHFCT1mm-Ankle (143).dcm": {
+    "radius": 183.99,
+    "curvature": 0.00544
+  },
+  "VHFCT1mm-Ankle (22).dcm": {
+    "radius": 186.05,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (133).dcm": {
+    "radius": 64.82,
+    "curvature": 0.01543
+  },
+  "VHFCT1mm-Ankle (105).dcm": {
+    "radius": 149.84,
+    "curvature": 0.00667
+  },
+  "VHFCT1mm-Ankle (38).dcm": {
+    "radius": 185.91,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (46).dcm": {
+    "radius": 185.87,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (50).dcm": {
+    "radius": 126.18,
+    "curvature": 0.00793
+  },
+  "VHFCT1mm-Ankle (8).dcm": {
+    "radius": 186.24,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (45).dcm": {
+    "radius": 64.21,
+    "curvature": 0.01557
+  },
+  "VHFCT1mm-Ankle (140).dcm": {
+    "radius": 171.96,
+    "curvature": 0.00582
+  },
+  "VHFCT1mm-Ankle (32).dcm": {
+    "radius": 95.59,
+    "curvature": 0.01046
+  },
+  "VHFCT1mm-Ankle (149).dcm": {
+    "radius": 73.21,
+    "curvature": 0.01366
+  },
+  "VHFCT1mm-Ankle (68).dcm": {
+    "radius": 138.61,
+    "curvature": 0.00721
+  },
+  "VHFCT1mm-Ankle (94).dcm": {
+    "radius": 186.29,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (121).dcm": {
+    "radius": 172.38,
+    "curvature": 0.0058
+  },
+  "VHFCT1mm-Ankle (6).dcm": {
+    "radius": 66.09,
+    "curvature": 0.01513
+  },
+  "VHFCT1mm-Ankle (15).dcm": {
+    "radius": 185.94,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (148).dcm": {
+    "radius": 86.58,
+    "curvature": 0.01155
+  },
+  "VHFCT1mm-Ankle (112).dcm": {
+    "radius": 136.04,
+    "curvature": 0.00735
+  },
+  "VHFCT1mm-Ankle (123).dcm": {
+    "radius": 117.11,
+    "curvature": 0.00854
+  },
+  "VHFCT1mm-Ankle (145).dcm": {
+    "radius": 143.31,
+    "curvature": 0.00698
+  },
+  "VHFCT1mm-Ankle (87).dcm": {
+    "radius": 186.27,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (135).dcm": {
+    "radius": 64.74,
+    "curvature": 0.01545
+  },
+  "VHFCT1mm-Ankle (63).dcm": {
+    "radius": 186.02,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (66).dcm": {
+    "radius": 185.92,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (7).dcm": {
+    "radius": 38.94,
+    "curvature": 0.02568
+  },
+  "VHFCT1mm-Ankle (59).dcm": {
+    "radius": 186.14,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (5).dcm": {
+    "radius": 40.09,
+    "curvature": 0.02495
+  },
+  "VHFCT1mm-Ankle (67).dcm": {
+    "radius": 70.53,
+    "curvature": 0.01418
+  },
+  "VHFCT1mm-Ankle (125).dcm": {
+    "radius": 185.69,
+    "curvature": 0.00539
+  },
+  "VHFCT1mm-Ankle (39).dcm": {
+    "radius": 185.93,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (61).dcm": {
+    "radius": 186.12,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (69).dcm": {
+    "radius": 186.02,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (76).dcm": {
+    "radius": 186.34,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (137).dcm": {
+    "radius": 146.8,
+    "curvature": 0.00681
+  },
+  "VHFCT1mm-Ankle (144).dcm": {
+    "radius": 186.09,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (49).dcm": {
+    "radius": 185.86,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (12).dcm": {
+    "radius": 64.78,
+    "curvature": 0.01544
+  },
+  "VHFCT1mm-Ankle (58).dcm": {
+    "radius": 186.22,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (90).dcm": {
+    "radius": 185.92,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (75).dcm": {
+    "radius": 185.98,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (55).dcm": {
+    "radius": 141.85,
+    "curvature": 0.00705
+  },
+  "VHFCT1mm-Ankle (47).dcm": {
+    "radius": 186.11,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (98).dcm": {
+    "radius": 113.61,
+    "curvature": 0.0088
+  },
+  "VHFCT1mm-Ankle (10).dcm": {
+    "radius": 185.88,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (71).dcm": {
+    "radius": 97.05,
+    "curvature": 0.0103
+  },
+  "VHFCT1mm-Ankle (56).dcm": {
+    "radius": 185.99,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (70).dcm": {
+    "radius": 185.84,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (73).dcm": {
+    "radius": 99.86,
+    "curvature": 0.01001
+  },
+  "VHFCT1mm-Ankle (129).dcm": {
+    "radius": 72.58,
+    "curvature": 0.01378
+  },
+  "VHFCT1mm-Ankle (41).dcm": {
+    "radius": 71.98,
+    "curvature": 0.01389
+  },
+  "VHFCT1mm-Ankle (131).dcm": {
+    "radius": 157.44,
+    "curvature": 0.00635
+  },
+  "VHFCT1mm-Ankle (111).dcm": {
+    "radius": 137.94,
+    "curvature": 0.00725
+  },
+  "VHFCT1mm-Ankle (25).dcm": {
+    "radius": 186.06,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (20).dcm": {
+    "radius": 185.95,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (53).dcm": {
+    "radius": 152.5,
+    "curvature": 0.00656
+  },
+  "VHFCT1mm-Ankle (139).dcm": {
+    "radius": 185.69,
+    "curvature": 0.00539
+  },
+  "VHFCT1mm-Ankle (80).dcm": {
+    "radius": 123.11,
+    "curvature": 0.00812
+  },
+  "VHFCT1mm-Ankle (130).dcm": {
+    "radius": 136.32,
+    "curvature": 0.00734
+  },
+  "VHFCT1mm-Ankle (101).dcm": {
+    "radius": 74.46,
+    "curvature": 0.01343
+  },
+  "VHFCT1mm-Ankle (78).dcm": {
+    "radius": 86.24,
+    "curvature": 0.0116
+  },
+  "VHFCT1mm-Ankle (92).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (26).dcm": {
+    "radius": 186.27,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (82).dcm": {
+    "radius": 186.08,
+    "curvature": 0.00537
+  },
+  "VHFCT1mm-Ankle (93).dcm": {
+    "radius": 186.55,
+    "curvature": 0.00536
+  },
+  "VHFCT1mm-Ankle (19).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  },
+  "VHFCT1mm-Ankle (33).dcm": {
+    "radius": 186.0,
+    "curvature": 0.00538
+  }
+}
