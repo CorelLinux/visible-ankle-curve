@@ -1,52 +1,72 @@
 import json
 import re
+import numpy as np
 import matplotlib.pyplot as plt
 
-# 결과 파일 경로
 RESULT_JSON = 'results/curvature.json'
 
-def plot_curvature_and_radius(json_path=RESULT_JSON):
+def analyze_and_save_results(json_path=RESULT_JSON):
     with open(json_path, 'r') as f:
         data = json.load(f)
 
-    # 파일명에서 슬라이스 번호 추출해서 정렬
-    pattern = re.compile(r'\((\d+)\)')  # 괄호 안 숫자 추출용
-
-    slices = []
-    radius_vals = []
-    curvature_vals = []
+    pattern = re.compile(r'\((\d+)\)')
+    slices, radius_vals, curvature_vals = [], [], []
 
     for filename, vals in data.items():
         match = pattern.search(filename)
         if match:
-            slice_num = int(match.group(1))
-            slices.append(slice_num)
+            slices.append(int(match.group(1)))
             radius_vals.append(vals['radius'])
             curvature_vals.append(vals['curvature'])
-        else:
-            # 번호 못 뽑으면 무시
-            continue
 
-    # 슬라이스 번호 기준으로 정렬
-    sorted_data = sorted(zip(slices, radius_vals, curvature_vals), key=lambda x: x[0])
-    slices, radius_vals, curvature_vals = zip(*sorted_data)
+    slices, radius_vals, curvature_vals = zip(*sorted(zip(slices, radius_vals, curvature_vals)))
 
-    # 그래프 그리기
+    # 통계 계산
+    stats = {
+        'radius_mean': float(np.mean(radius_vals)),
+        'radius_median': float(np.median(radius_vals)),
+        'radius_std': float(np.std(radius_vals)),
+        'curvature_mean': float(np.mean(curvature_vals)),
+        'curvature_median': float(np.median(curvature_vals)),
+        'curvature_std': float(np.std(curvature_vals)),
+        'num_samples': len(slices)
+    }
+
+    # 시각화 - 선 그래프
     fig, ax1 = plt.subplots()
-
     ax1.set_xlabel('Slice Number')
     ax1.set_ylabel('Radius (mm)', color='tab:blue')
-    ax1.plot(slices, radius_vals, marker='o', linestyle='-', color='tab:blue', label='Radius')
+    ax1.plot(slices, radius_vals, 'o-', color='tab:blue')
     ax1.tick_params(axis='y', labelcolor='tab:blue')
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('Curvature (1/mm)', color='tab:red')
-    ax2.plot(slices, curvature_vals, marker='x', linestyle='--', color='tab:red', label='Curvature')
+    ax2.plot(slices, curvature_vals, 'x--', color='tab:red')
     ax2.tick_params(axis='y', labelcolor='tab:red')
 
     plt.title('Curvature and Radius vs Slice Number')
     fig.tight_layout()
-    plt.show()
+    plt.savefig('results/curvature_vs_slice.png')
+    plt.close()
+
+    # 히스토그램
+    plt.hist(radius_vals, bins=15, color='blue', alpha=0.7)
+    plt.title('Radius Distribution')
+    plt.xlabel('Radius (mm)')
+    plt.ylabel('Frequency')
+    plt.savefig('results/radius_histogram.png')
+    plt.close()
+
+    plt.hist(curvature_vals, bins=15, color='red', alpha=0.7)
+    plt.title('Curvature Distribution')
+    plt.xlabel('Curvature (1/mm)')
+    plt.ylabel('Frequency')
+    plt.savefig('results/curvature_histogram.png')
+    plt.close()
+
+    # 통계 json 저장
+    with open('results/statistics.json', 'w') as f:
+        json.dump(stats, f, indent=2)
 
 if __name__ == "__main__":
-    plot_curvature_and_radius()
+    analyze_and_save_results()
