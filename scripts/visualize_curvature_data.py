@@ -8,49 +8,48 @@ import cv2
 from scipy.stats import mode # 최빈값 계산을 위해 추가
 
 # --- 설정값 ---
-results_file = "results/curvature.json"
+# analyze_curvature.py 에서 생성되는 파일 경로
+input_stats_file = "results/statistics.json"
 input_dcm_dir = "data/dcm" # 원본 dcm 파일 경로 (이미지 예시를 위해 필요)
-output_graph_dir = "results/graphs" # 그래프 저장 폴더
+output_graph_dir = "results/final_graphs" # 최종 그래프들을 저장할 폴더 (artifact 업로드용)
 smoothing_window_size = 5 # 스무딩(이동 평균) 윈도우 크기. 숫자가 클수록 더 부드러워짐.
 
 os.makedirs(output_graph_dir, exist_ok=True)
 
-print("[*] 그래프 생성을 위한 데이터 불러오기 시작")
+print("[*] 그래프 생성을 위한 데이터 및 통계 불러오기 시작")
 
-# 1. results.json 파일에서 데이터 불러오기
+# 1. statistics.json 파일에서 통계 데이터 불러오기
 try:
-    with open(results_file, "r") as f:
-        results = json.load(f)
+    with open(input_stats_file, "r") as f:
+        stats_data = json.load(f)
+    print(f"[✓] '{input_stats_file}' 불러오기 완료.")
 except FileNotFoundError:
-    print(f"오류: '{results_file}' 파일을 찾을 수 없습니다. 분석 스크립트를 먼저 실행해주세요.")
+    print(f"오류: '{input_stats_file}' 파일을 찾을 수 없습니다. analyze_curvature.py 스크립트를 먼저 실행해주세요.")
     exit()
 except json.JSONDecodeError:
-    print(f"오류: '{results_file}' 파일이 올바른 JSON 형식이 아닙니다.")
+    print(f"오류: '{input_stats_file}' 파일이 올바른 JSON 형식이 아닙니다.")
     exit()
 
-# 데이터 추출 및 정렬
-slice_numbers = []
-radii = []
-curvatures = []
-# 슬라이스 파일 이름을 숫자로 정렬하기 위해, 파일명에서 숫자 부분을 추출하여 정렬 기준으로 사용
-sorted_fnames = sorted(results.keys(), key=lambda x: int(''.join(filter(str.isdigit, x))) if any(char.isdigit() for char in x) else x)
+# 통계 데이터에서 필요한 값 추출
+try:
+    slices = np.array(stats_data['slices'])
+    radius_vals = np.array(stats_data['radius_vals'])
+    curvature_vals = np.array(stats_data['curvature_vals'])
+    
+    # 대표값은 statistics.json에 이미 계산되어 있을 수 있지만, 
+    # visualize_curvature_data.py 에서 다시 계산하여 일관성을 유지
+    # 또는 statistics.json에 포함시켜서 불러오는 것이 더 안정적.
+    # 여기서는 다시 계산하는 방식으로 진행.
+    
+except KeyError as e:
+    print(f"오류: '{input_stats_file}' 파일에 필요한 키({e})가 없습니다. analyze_curvature.py 스크립트를 확인해주세요.")
+    exit()
 
-for i, fname in enumerate(sorted_fnames):
-    if results[fname]['radius'] is not None and results[fname]['curvature'] is not None:
-        slice_numbers.append(i) # 정렬된 순서대로 슬라이스 번호 부여
-        radii.append(results[fname]['radius'])
-        curvatures.append(results[fname]['curvature'])
-    else:
-        print(f"경고: {fname} 파일의 데이터가 유효하지 않아 그래프에서 제외합니다.")
-
-if not slice_numbers:
+if not slices.size or not radius_vals.size or not curvature_vals.size:
     print("오류: 분석할 유효한 데이터가 없습니다. 스크립트를 종료합니다.")
     exit()
 
-radii = np.array(radii)
-curvatures = np.array(curvatures)
-
-print(f"[✓] 총 {len(slice_numbers)}개 슬라이스 데이터 불러오기 완료.")
+print(f"[✓] 총 {len(slices)}개 슬라이스 데이터 불러오기 완료.")
 
 # --- 2차 가공 및 그래프 생성 ---
 
@@ -58,11 +57,11 @@ print(f"[✓] 총 {len(slice_numbers)}개 슬라이스 데이터 불러오기 �
 print("[*] 슬라이스별 반경/곡률 추세선 그래프 생성 중...")
 
 # 이동 평균 (Moving Average) 계산
-smoothed_radii = np.convolve(radii, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
-smoothed_curvatures = np.convolve(curvatures, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
+smoothed_radii = np.convolve(radius_vals, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
+smoothed_curvatures = np.convolve(curvature_vals, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
 
 # 스무딩된 데이터의 슬라이스 번호 범위 조정
-smoothed_slice_numbers = slice_numbers[smoothing_window_size-1:]
+smoothed_slice_numbers = slices[smoothing_window_size-1:]
 
 plt.figure(figsize=(14, 7))
 
@@ -72,7 +71,7 @@ ax1.plot(smoothed_slice_numbers, smoothed_radii, 'b-', label='스무딩된 반�
 ax1.set_xlabel('슬라이스 번호')
 ax1.set_ylabel('반경 (mm)', color='b')
 ax1.tick_params(axis='y', labelcolor='b')
-ax1.set_title('슬라이스 번호에 따른 평균 반경 및 곡률 변화 추이')
+ax1.set_title('슬라이스 번호에 따른 평균 반경 및 곡률 변화 추이 (Smoothed)')
 ax1.grid(True, linestyle='--', alpha=0.7)
 
 # Curvature 플롯 (두 번째 y축 사용)
@@ -89,56 +88,58 @@ ax2.legend(lines + lines2, labels + labels2, loc='upper right')
 plt.tight_layout()
 plt.savefig(os.path.join(output_graph_dir, "smoothed_radius_curvature_trend.png"))
 print("[✓] 'smoothed_radius_curvature_trend.png' 저장 완료.")
-# plt.show() # 스크립트 실행 시 바로 그래프를 보고 싶다면 주석 해제
+plt.close() # 메모리 관리를 위해 그래프를 닫음
 
 # --- 2. 반경/곡률 분포 히스토그램 (대표값 표시) ---
 print("[*] 반경/곡률 분포 히스토그램 생성 중...")
 
 # 반경 분포 히스토그램
 plt.figure(figsize=(10, 6))
-plt.hist(radii, bins=20, color='royalblue', edgecolor='black', alpha=0.7)
+plt.hist(radius_vals, bins=15, color='royalblue', edgecolor='black', alpha=0.7) # analyze_curvature.py와 동일한 bin 수 (15)
 plt.title('반경 분포 (Radius Distribution)')
 plt.xlabel('반경 (mm)')
 plt.ylabel('빈도수')
 
 # 대표값 계산 및 표시
-mean_radius = np.mean(radii)
-median_radius = np.median(radii)
-mode_result_radius = mode(radii) # scipy.stats.mode는 튜플을 반환 (mode, count)
-mode_radius = mode_result_radius.mode[0] if mode_result_radius.mode.size > 0 else np.nan # 최빈값이 여러개일 수 있으므로 첫번째 값 사용
+mean_radius = np.mean(radius_vals)
+median_radius = np.median(radius_vals)
+mode_result_radius = mode(radius_vals, keepdims=True) # keepdims=True 추가하여 미래 버전 호환성 확보
+mode_radius = mode_result_radius.mode[0] if mode_result_radius.mode.size > 0 else np.nan
 
 plt.axvline(mean_radius, color='red', linestyle='dashed', linewidth=2, label=f'평균: {mean_radius:.2f} mm')
 plt.axvline(median_radius, color='green', linestyle='dashed', linewidth=2, label=f'중앙값: {median_radius:.2f} mm')
-plt.axvline(mode_radius, color='purple', linestyle='dashed', linewidth=2, label=f'최빈값: {mode_radius:.2f} mm') # 최빈값 추가
+if not np.isnan(mode_radius): # 최빈값이 있을 경우에만 표시
+    plt.axvline(mode_radius, color='purple', linestyle='dashed', linewidth=2, label=f'최빈값: {mode_radius:.2f} mm')
 plt.legend()
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.savefig(os.path.join(output_graph_dir, "radius_distribution_with_stats.png"))
 print("[✓] 'radius_distribution_with_stats.png' 저장 완료.")
-# plt.show()
+plt.close()
 
 # 곡률 분포 히스토그램
 plt.figure(figsize=(10, 6))
-plt.hist(curvatures, bins=20, color='lightcoral', edgecolor='black', alpha=0.7)
+plt.hist(curvature_vals, bins=15, color='lightcoral', edgecolor='black', alpha=0.7) # analyze_curvature.py와 동일한 bin 수 (15)
 plt.title('곡률 분포 (Curvature Distribution)')
 plt.xlabel('곡률 (1/mm)')
 plt.ylabel('빈도수')
 
 # 대표값 계산 및 표시
-mean_curvature = np.mean(curvatures)
-median_curvature = np.median(curvatures)
-mode_result_curvature = mode(curvatures)
+mean_curvature = np.mean(curvature_vals)
+median_curvature = np.median(curvature_vals)
+mode_result_curvature = mode(curvature_vals, keepdims=True) # keepdims=True 추가
 mode_curvature = mode_result_curvature.mode[0] if mode_result_curvature.mode.size > 0 else np.nan
 
 plt.axvline(mean_curvature, color='red', linestyle='dashed', linewidth=2, label=f'평균: {mean_curvature:.5f} 1/mm')
 plt.axvline(median_curvature, color='green', linestyle='dashed', linewidth=2, label=f'중앙값: {median_curvature:.5f} 1/mm')
-plt.axvline(mode_curvature, color='purple', linestyle='dashed', linewidth=2, label=f'최빈값: {mode_curvature:.5f} 1/mm') # 최빈값 추가
+if not np.isnan(mode_curvature): # 최빈값이 있을 경우에만 표시
+    plt.axvline(mode_curvature, color='purple', linestyle='dashed', linewidth=2, label=f'최빈값: {mode_curvature:.5f} 1/mm')
 plt.legend()
 plt.grid(axis='y', linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.savefig(os.path.join(output_graph_dir, "curvature_distribution_with_stats.png"))
 print("[✓] 'curvature_distribution_with_stats.png' 저장 완료.")
-# plt.show()
+plt.close()
 
 # --- 3. 가장 흔한 곡률/반경을 가진 슬라이스의 이미지 예시 ---
 print("[*] 대표 슬라이스 이미지 예시 생성 중...")
@@ -147,9 +148,10 @@ def analyze_and_draw(fname, output_path):
     path = os.path.join(input_dcm_dir, fname)
     try:
         ds = pydicom.dcmread(path)
-        img = ds.pixel_array.astype(np.uint8)
-        img = cv2.equalizeHist(img) # 원본 분석 코드와 동일한 전처리
-        edges = cv2.Canny(img, 50, 150) # 원본 분석 코드와 동일한 Canny 파라미터
+        img_original = ds.pixel_array.astype(np.uint8)
+        img_processed = cv2.equalizeHist(img_original)
+        # analyze_curvature.py 에서 사용된 Canny 파라미터와 동일하게 유지
+        edges = cv2.Canny(img_processed, 50, 150) 
 
         cnts, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         if not cnts:
@@ -161,16 +163,11 @@ def analyze_and_draw(fname, output_path):
         center = (int(x), int(y))
         radius = int(r)
 
-        # Matplotlib으로 이미지 그리기 (OpenCV BGR이 아닌 RGB로 변환하여 출력)
         plt.figure(figsize=(8, 8))
-        plt.imshow(img, cmap='gray') # 원본 이미지
+        plt.imshow(img_original, cmap='gray') # 원본 이미지 표시
         plt.imshow(edges, cmap='Reds', alpha=0.5) # Canny 엣지 (투명하게 오버레이)
-        cv2.circle(img, center, radius, (255, 0, 0), 2) # 원본 이미지에 빨간색 원 그리기 (OpenCV는 BGR이 기본이므로 Matplotlib에서는 빨간색으로 나올 것임)
 
-        # Matplotlib에 그릴 때는 BGR이 아니라 RGB로 이미지를 불러와야 제대로 된 색상으로 표시됨.
-        # cv2.circle을 직접 plt.imshow 위에 그릴 방법이 마땅치 않으므로,
-        # 원본 이미지에 그리지 않고, matplotlib의 circle 함수를 사용하여 그리는 것이 더 깔끔함.
-        # 아래는 Matplotlib 함수를 사용하는 방식:
+        # Matplotlib에 원 그리기
         circle_patch = plt.Circle(center, radius, color='blue', fill=False, linewidth=2, linestyle='--')
         plt.gca().add_patch(circle_patch)
 
@@ -178,7 +175,7 @@ def analyze_and_draw(fname, output_path):
         plt.axis('off') # 축 제거
         plt.tight_layout()
         plt.savefig(output_path)
-        plt.close() # 메모리 관리를 위해 plt.show() 대신 plt.close() 사용
+        plt.close()
         print(f"[✓] {os.path.basename(output_path)} 저장 완료.")
 
     except Exception as e:
@@ -186,14 +183,37 @@ def analyze_and_draw(fname, output_path):
 
 # 최빈 반경에 해당하는 슬라이스 찾기
 if not np.isnan(mode_radius):
-    most_common_radius_fnames = []
-    for fname, data in results.items():
-        if data['radius'] is not None and abs(data['radius'] - mode_radius) < 0.1: # 소수점 오차 감안
-            most_common_radius_fnames.append(fname)
-    if most_common_radius_fnames:
-        # 가장 흔한 반경을 가진 슬라이스 중 하나만 선택 (예: 첫 번째로 발견된 슬라이스)
-        example_fname = sorted_fnames[slice_numbers.index(most_common_radius_fnames[0])] if most_common_radius_fnames[0] in sorted_fnames else most_common_radius_fnames[0]
-        analyze_and_draw(example_fname, os.path.join(output_graph_dir, f"example_radius_{mode_radius:.2f}.png"))
+    # 최빈 반경 값에 가장 가까운 슬라이스 파일명 찾기
+    # analyze_curvature.py에서 사용된 파일명 순서를 유지하기 위해
+    # stats_data['files'] (또는 이에 상응하는) 정보가 있다면 그것을 활용.
+    # 현재 stats_data에는 파일명 순서 정보가 없으므로,
+    # radius_vals 배열의 인덱스를 사용하여 원본 파일명을 역추적해야 함.
+    # 이를 위해 analyze_curvature.py에서 파일명 리스트도 함께 저장하도록 수정이 필요함.
+    # 일단은 stats_data에서 슬라이스별 파일명을 가져오는 것을 가정하고,
+    # 없으면 sorted_fnames를 직접 만들어서 사용.
+    
+    # analyze_curvature.py의 statistics.json에 'fnames' 리스트를 추가했다는 가정하에 진행
+    if 'fnames' in stats_data:
+        all_fnames = stats_data['fnames']
+    else:
+        # 'fnames'가 없다면, 기존 results.json에서 사용했던 방식으로 정렬하여 사용
+        # (이 경우 visualize_curvature_data.py 스크립트 상단에 results.json 로드 로직 필요)
+        # 여기서는 간단하게 input_dcm_dir에서 바로 정렬하여 사용
+        all_fnames = sorted(os.listdir(input_dcm_dir), key=lambda x: int(''.join(filter(str.isdigit, x))) if any(char.isdigit() for char in x) else x)
+        all_fnames = [f for f in all_fnames if f.endswith(".dcm")]
+
+
+    example_radius_fname = None
+    min_radius_diff = float('inf')
+    
+    # 모든 파일명에 대해 순회하며 가장 가까운 반경 값을 가진 파일 찾기
+    for i, r_val in enumerate(radius_vals):
+        if abs(r_val - mode_radius) < min_radius_diff:
+            min_radius_diff = abs(r_val - mode_radius)
+            example_radius_fname = all_fnames[i] # 해당 인덱스의 파일명
+
+    if example_radius_fname:
+        analyze_and_draw(example_radius_fname, os.path.join(output_graph_dir, f"example_radius_{mode_radius:.2f}.png"))
     else:
         print("경고: 최빈 반경에 해당하는 예시 슬라이스를 찾을 수 없습니다.")
 else:
@@ -201,16 +221,25 @@ else:
 
 # 최빈 곡률에 해당하는 슬라이스 찾기
 if not np.isnan(mode_curvature):
-    most_common_curvature_fnames = []
-    for fname, data in results.items():
-        if data['curvature'] is not None and abs(data['curvature'] - mode_curvature) < 0.0001: # 소수점 오차 감안
-            most_common_curvature_fnames.append(fname)
-    if most_common_curvature_fnames:
-        example_fname = sorted_fnames[slice_numbers.index(most_common_curvature_fnames[0])] if most_common_curvature_fnames[0] in sorted_fnames else most_common_curvature_fnames[0]
-        analyze_and_draw(example_fname, os.path.join(output_graph_dir, f"example_curvature_{mode_curvature:.5f}.png"))
+    example_curvature_fname = None
+    min_curvature_diff = float('inf')
+    
+    for i, c_val in enumerate(curvature_vals):
+        if abs(c_val - mode_curvature) < min_curvature_diff:
+            min_curvature_diff = abs(c_val - mode_curvature)
+            example_curvature_fname = all_fnames[i] # 해당 인덱스의 파일명
+    
+    if example_curvature_fname:
+        analyze_and_draw(example_curvature_fname, os.path.join(output_graph_dir, f"example_curvature_{mode_curvature:.5f}.png"))
     else:
         print("경고: 최빈 곡률에 해당하는 예시 슬라이스를 찾을 수 없습니다.")
 else:
     print("경고: 최빈 곡률 값을 계산할 수 없어 예시 슬라이스를 생성하지 않습니다.")
 
 print("[*] 모든 그래프 생성 완료.")
+
+# GitHub Actions의 artifact로 업로드하기 위한 메시지 (선택 사항)
+# 실제 업로드는 .yml 파일에서 actions/upload-artifact@v4를 통해 이루어짐.
+print(f"\n[INFO] 생성된 모든 그래프는 '{output_graph_dir}' 폴더에 저장되었습니다.")
+print("이 폴더의 내용을 GitHub Actions artifact로 업로드하여 확인할 수 있습니다.")
+
