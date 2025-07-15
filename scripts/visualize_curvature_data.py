@@ -9,35 +9,39 @@ from scipy.stats import mode
 
 # --- 설정값 ---
 input_stats_file = "results/statistics.json"
+input_model_file = "results/contact_ratio_model_realistic.json" # 현실적인 모델 파일
 input_dcm_dir = "data/dcm"
-output_graph_dir = "results/final_graphs"
+output_graph_dir = "results/final_graphs_realistic" # 새로운 폴더에 결과 저장
 smoothing_window_size = 5
 
 os.makedirs(output_graph_dir, exist_ok=True)
 
-print("[*] Starting data and statistics loading for graph generation.") # 영어로 변경
+print("[*] Starting data and statistics loading for realistic graph generation.")
 
-# 1. statistics.json 파일에서 통계 데이터 불러오기
+# 1. 통계 및 모델 데이터 불러오기
 try:
     with open(input_stats_file, "r") as f:
         stats_data = json.load(f)
-    print(f"[✓] Successfully loaded '{input_stats_file}'.") # 영어로 변경
-except FileNotFoundError:
-    print(f"Error: File '{input_stats_file}' not found. Please run analyze_curvature.py first.") # 영어로 변경
+    with open(input_model_file, "r") as f:
+        model_data = json.load(f)
+    print(f"[✓] Successfully loaded '{input_stats_file}' and '{input_model_file}'.")
+except FileNotFoundError as e:
+    print(f"Error: File not found - {e}. Please run analyze_curvature.py and the updated fit_contact_ratio_model.py first.")
     exit()
-except json.JSONDecodeError:
-    print(f"Error: '{input_stats_file}' is not a valid JSON file.") # 영어로 변경
+except json.JSONDecodeError as e:
+    print(f"Error: JSON decode error - {e}. Check the integrity of your JSON files.")
     exit()
 
-# 통계 데이터에서 필요한 값 추출
+# 데이터 추출
 try:
     slices = np.array(stats_data['slices'])
     fnames_in_order = stats_data['fnames']
     radius_vals = np.array(stats_data['radius_vals'])
     curvature_vals = np.array(stats_data['curvature_vals'])
-    
+    max_contact_ratio = model_data['scaling']['max_contact_ratio']
+    exp_params = model_data['exp']
 except KeyError as e:
-    print(f"Error: Required key '{e}' missing in '{input_stats_file}'. Please check analyze_curvature.py script.") # 영어로 변경
+    print(f"Error: Required key '{e}' missing in JSON files. Please check the generating scripts.")
     exit()
 
 if not slices.size or not radius_vals.size or not curvature_vals.size:
@@ -48,41 +52,35 @@ print(f"[✓] Loaded {len(slices)} slices of data.") # 영어로 변경
 
 # --- 2차 가공 및 그래프 생성 ---
 
-# --- 1. 슬라이스 번호에 따른 반경/곡률 추세선 그래프 (스무딩 적용) ---
-print("[*] Generating smoothed radius/curvature trend graph per slice...") # 영어로 변경
+# --- 2. 곡률-밀착률 예측 모델 시각화 ---
+print("[*] Generating curvature-contact ratio prediction graph...")
 
-# 이동 평균 (Moving Average) 계산
-smoothed_radii = np.convolve(radius_vals, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
-smoothed_curvatures = np.convolve(curvature_vals, np.ones(smoothing_window_size)/smoothing_window_size, mode='valid')
+def exp_model(k, a, c): return c * (1 - np.exp(-a * k))
 
-# 스무딩된 데이터의 슬라이스 번호 범위 조정
-smoothed_slice_numbers = slices[smoothing_window_size-1:]
+# 전체 곡률 데이터에 대해 예측된 밀착률 계산
+predicted_contact_ratio = exp_model(curvature_vals, exp_params['a'], exp_params['c'])
 
-plt.figure(figsize=(14, 7))
+plt.figure(figsize=(12, 7))
+plt.scatter(curvature_vals, predicted_contact_ratio, alpha=0.6, label='Predicted Contact Ratio for Each Slice')
 
-# Radius 플롯
-ax1 = plt.gca()
-ax1.plot(smoothed_slice_numbers, smoothed_radii, 'b-', label='Smoothed Radius (mm)') # 영어로 변경
-ax1.set_xlabel('Slice Number')
-ax1.set_ylabel('Radius (mm)', color='b')
-ax1.tick_params(axis='y', labelcolor='b')
-ax1.set_title('Smoothed Average Radius and Curvature Trend vs Slice Number') # 영어로 변경
-ax1.grid(True, linestyle='--', alpha=0.7)
+# 대표값에 대한 예측 밀착률 표시
+mean_curv = np.mean(curvature_vals)
+median_curv = np.median(curvature_vals)
+mode_curv = mode(curvature_vals, keepdims=True).mode[0]
 
-# Curvature 플롯 (두 번째 y축 사용)
-ax2 = ax1.twinx()
-ax2.plot(smoothed_slice_numbers, smoothed_curvatures, 'r--', label='Smoothed Curvature (1/mm)') # 영어로 변경
-ax2.set_ylabel('Curvature (1/mm)', color='r')
-ax2.tick_params(axis='y', labelcolor='r')
+plt.plot(mean_curv, exp_model(mean_curv, **exp_params), 'r*', markersize=15, label=f'Mean Curvature ({mean_curv:.4f}) -> {exp_model(mean_curv, **exp_params):.2f} Ratio')
+plt.plot(median_curv, exp_model(median_curv, **exp_params), 'g^', markersize=12, label=f'Median Curvature ({median_curv:.4f}) -> {exp_model(median_curv, **exp_params):.2f} Ratio')
+plt.plot(mode_curv, exp_model(mode_curv, **exp_params), 'ms', markersize=10, label=f'Mode Curvature ({mode_curv:.4f}) -> {exp_model(mode_curv, **exp_params):.2f} Ratio')
 
-# 범례 추가
-lines, labels = ax1.get_legend_handles_labels()
-lines2, labels2 = ax2.get_legend_handles_labels()
-ax2.legend(lines + lines2, labels + labels2, loc='upper right')
-
+plt.title('Predicted Contact Ratio based on Skin Curvature (Realistic Model)')
+plt.xlabel('Skin Curvature (1/mm)')
+plt.ylabel(f'Predicted Contact Ratio (Max = {max_contact_ratio})')
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.ylim(0, 1.0) # Y축 범위를 1.0까지로 설정하여 최대 밀착률 한계를 명확히 보여줌
 plt.tight_layout()
-plt.savefig(os.path.join(output_graph_dir, "smoothed_radius_curvature_trend.png"))
-print(f"[✓] 'smoothed_radius_curvature_trend.png' saved.") # 영어로 변경
+plt.savefig(os.path.join(output_graph_dir, "predicted_contact_ratio_realistic.png"))
+print(f"[✓] 'predicted_contact_ratio_realistic.png' saved.")
 plt.close()
 
 # --- 2. 반경/곡률 분포 히스토그램 (대표값 표시) ---
